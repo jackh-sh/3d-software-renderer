@@ -6,6 +6,8 @@
 -   [Getting Started](#getting-started)
 -   [License](#license)
 
+![Demo](./.github/demo.gif)
+
 ## About The Project
 
 I wanted to learn C++ and CMake and I wanted to learn SDL, so I made this project. It's a simple app where a square floats around the screen. It's not very exciting, but it's a good starting point for anyone who wants to learn SDL.
