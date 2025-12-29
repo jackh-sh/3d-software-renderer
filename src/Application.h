@@ -13,6 +13,7 @@ public:
     void update(double delta_time);
 
     void drawPoint(Vector2 point);
+    void drawLine(Vector2 a, Vector2 b);
 
 private:
     SDL_Window *m_window;

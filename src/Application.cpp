@@ -1,5 +1,6 @@
 #include "Application.h"
 #include <SDL_rect.h>
+#include <SDL_render.h>
 #include <cmath>
 #include <iostream>
 #include "constants.h"
@@ -84,6 +85,11 @@ void Application::drawPoint(Vector2 point) {
     SDL_RenderFillRect(m_window_renderer, &rect);
 }
 
+void Application::drawLine(Vector2 a, Vector2 b) {
+    SDL_SetRenderDrawColor(m_window_renderer, 255, 255, 255, 255);
+    SDL_RenderDrawLine(m_window_renderer, a.x, a.y, b.x, b.y);
+}
+
 void Application::update(double delta_time)
 {
     SDL_RenderClear(m_window_renderer);
@@ -102,19 +108,35 @@ void Application::update(double delta_time)
         vec3( -0.25f,  0.25f,  0.25f ),
     };
 
-    for (const Vector3& v : vs) {
-        auto proj = project(rotate_xz(v, m_angle));
-        auto p = toScreen(proj);
+    int faces[6][4] = {
+        {0, 1, 2, 3}, // front
+        {4, 5, 6, 7}, // back
+        {0, 1, 5, 4}, // bottom
+        {3, 2, 6, 7}, // top
+        {0, 3, 7, 4}, // left
+        {1, 2, 6, 5}  // right
+    };
+    // for (const Vector3& v : vs) {
+    //     auto proj = project(rotate_xz(v, m_angle));
+    //     auto p = toScreen(proj);
 
-        this->drawPoint(p);
+    //     this->drawPoint(p);
+    // }
 
+    for (int f = 0; f < 6; ++f) {
+        for (int i = 0; i < 4; ++i) {
+            int idx0 = faces[f][i];
+            int idx1 = faces[f][(i + 1) % 4]; // next vertex, wrap around
+
+            Vector3 v0 = vs[idx0];
+            Vector3 v1 = vs[idx1];
+
+            Vector2 p0 = toScreen(project(rotate_xz(v0, m_angle)));
+            Vector2 p1 = toScreen(project(rotate_xz(v1, m_angle)));
+
+            this->drawLine(p0, p1);
+        }
     }
-
-    this->drawPoint(toScreen(Vector2{
-        .x= 0.0f,
-        .y= 0.0f
-    }));
-
 
     SDL_SetRenderDrawColor(m_window_renderer, 0, 0, 0, 255);
 
