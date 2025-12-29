@@ -10,7 +10,7 @@ set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(SDL2_DIR /opt/homebrew/lib/cmake/SDL2)
 find_package(SDL2 REQUIRED)
 
-file(GLOB SOURCES "${SOURCE_DIR}/*.cpp")
+file(GLOB_RECURSE SOURCES "${SOURCE_DIR}/*.cpp")
 add_executable(App ${SOURCES})
 
 target_include_directories(App PRIVATE ${SDL2_INCLUDE_DIRS})

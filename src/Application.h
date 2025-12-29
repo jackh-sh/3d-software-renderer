@@ -1,8 +1,7 @@
 #pragma once
 
 #include <SDL.h>
-#include <iostream>
-#include <memory>
+#include "lib/math.h"
 
 class Application
 {
@@ -12,7 +11,8 @@ public:
 
     void loop();
     void update(double delta_time);
-    void draw();
+
+    void drawPoint(Vector2 point);
 
 private:
     SDL_Window *m_window;
@@ -25,4 +25,6 @@ private:
     int m_shape_x_direction;
     int m_shape_y_direction;
     int m_shape_velocity;
+
+    float m_angle;
 };

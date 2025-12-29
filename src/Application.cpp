@@ -1,10 +1,12 @@
 #include "Application.h"
-#define SCREEN_WIDTH 680
-#define SCREEN_HEIGHT 480
+#include <SDL_rect.h>
+#include <cmath>
+#include <iostream>
+#include "constants.h"
 
 Application::Application()
 {
-    m_window = SDL_CreateWindow("Example Application",
+    m_window = SDL_CreateWindow("3D Scene",
                                 SDL_WINDOWPOS_CENTERED,
                                 SDL_WINDOWPOS_CENTERED,
                                 SCREEN_WIDTH, SCREEN_HEIGHT,
@@ -26,14 +28,14 @@ Application::Application()
         return;
     }
 
+    SDL_RaiseWindow(m_window);
+
     m_shape_x = 20;
     m_shape_y = 20;
     m_shape_width = 50;
     m_shape_height = 50;
-    m_shape_velocity = 1;
 
-    m_shape_x_direction = m_shape_velocity;
-    m_shape_y_direction = m_shape_velocity;
+    m_angle = 0;
 }
 
 Application::~Application()
@@ -65,42 +67,54 @@ void Application::loop()
             }
         }
         update(1.0 / 60.0);
-        draw();
     }
+}
+
+void Application::drawPoint(Vector2 point) {
+    int size = 10;
+
+    SDL_Rect rect = SDL_Rect{
+        .h = size,
+        .w = size,
+        .x = static_cast<int>(point.x - size / 2),
+        .y = static_cast<int>(point.y - size / 2)
+    };
+
+    SDL_SetRenderDrawColor(m_window_renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(m_window_renderer, &rect);
 }
 
 void Application::update(double delta_time)
 {
-    if (m_shape_x > SCREEN_WIDTH - m_shape_width)
-        m_shape_x_direction = -m_shape_velocity;
-
-    if (m_shape_x < 0)
-        m_shape_x_direction = m_shape_velocity;
-
-    if (m_shape_y > SCREEN_HEIGHT - m_shape_height)
-        m_shape_y_direction = -m_shape_velocity;
-
-    if (m_shape_y < 0)
-        m_shape_y_direction = m_shape_velocity;
-
-    std::cout << "x: " << m_shape_x << " y: " << m_shape_y << "\n";
-
-    m_shape_x += m_shape_x_direction;
-    m_shape_y += m_shape_y_direction;
-}
-
-void Application::draw()
-{
     SDL_RenderClear(m_window_renderer);
 
-    SDL_Rect rect;
-    rect.x = m_shape_x;
-    rect.y = m_shape_y;
-    rect.w = m_shape_width;
-    rect.h = m_shape_height;
+    m_angle += M_PI * delta_time;
 
-    SDL_SetRenderDrawColor(m_window_renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(m_window_renderer, &rect);
+    Vector3 vs[8] = {
+        vec3( -0.25f, -0.25f, -0.25f ),
+        vec3(  0.25f, -0.25f, -0.25f ),
+        vec3(  0.25f,  0.25f, -0.25f ),
+        vec3( -0.25f,  0.25f, -0.25f ),
+
+        vec3( -0.25f, -0.25f,  0.25f ),
+        vec3(  0.25f, -0.25f,  0.25f ),
+        vec3(  0.25f,  0.25f,  0.25f ),
+        vec3( -0.25f,  0.25f,  0.25f ),
+    };
+
+    for (const Vector3& v : vs) {
+        auto proj = project(rotate_xz(v, m_angle));
+        auto p = toScreen(proj);
+
+        this->drawPoint(p);
+
+    }
+
+    this->drawPoint(toScreen(Vector2{
+        .x= 0.0f,
+        .y= 0.0f
+    }));
+
 
     SDL_SetRenderDrawColor(m_window_renderer, 0, 0, 0, 255);
 
