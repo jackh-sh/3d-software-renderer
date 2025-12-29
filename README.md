@@ -1,19 +1,10 @@
-<!-- PROJECT LOGO -->
-<br />
-<p align="center">
-  <h3 align="center">SDL Example</h3>
-</p>
-
-<!-- TABLE OF CONTENTS -->
+# 3D Software Renderer
 
 ## Table of Contents
 
 -   [About the Project](#about-the-project)
 -   [Getting Started](#getting-started)
 -   [License](#license)
--   [Contact](#contact)
-
-<!-- ABOUT THE PROJECT -->
 
 ## About The Project
 
@@ -25,28 +16,19 @@ I wanted to learn C++ and CMake and I wanted to learn SDL, so I made this projec
 
 This project is written in C++.
 
-To get a local copy up and running follow these simple steps.
+To get a local copy up and running follow these simple steps. (MacOS arm64 only supported for now due to brew paths)
 
-Build the project:
-
-```sh
-$ mkdir build && cd build
-$ cmake ..
-$ cmake --build .
-```
-
-Then run the executable:
+Install sdl:
 
 ```sh
-$ ./App
+$ brew install sdl2
+
+Use make to build and run:
+
+```sh
+$ make
 ```
 
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-
-## Contact
-
-Jack Humphries - me@jackhumphries.io
-
-Project Link: [https://github.com/JackHumphries9/SDL_Example](https://github.com/JackHumphries9/printf-vs-write)
